@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "papis-bbt-formatter"
+version = "0.1.0"
+description = ""
+authors = ["Marty Oehme <marty.oehme@gmail.com>"]
+readme = "README.md"
+packages = [{include = "papis_bbt_formatter"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+papis = "^0.13"
+
+[tool.poetry.plugins."papis.format"]
+bbt = "papis_bbt_formatter:BBTFormatter"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
