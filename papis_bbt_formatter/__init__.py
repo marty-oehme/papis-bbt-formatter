@@ -1,5 +1,3 @@
-# adapted from https://github.com/hrdl-github/papis/commit/b9b9c6eaa3de159e1b210174ef49e90a89271eb8
-# with much gratitude.
 import re
 from typing import Any
 import papis.format
@@ -10,7 +8,9 @@ import papis.logging
 
 logger = papis.logging.get_logger(__name__)
 
-DEFAULT_TITLE_LENGTH=4
+DEFAULT_TITLE_LENGTH_WORDS = 3
+DEFAULT_TITLE_LENGTH_CHARS = -1
+
 
 class BBTFormatter(papis.format.Formater):
     """Provides zotero better-bibtex-like keys."""
@@ -28,32 +28,47 @@ class BBTFormatter(papis.format.Formater):
                 if "author_list" in doc
                 else doc["author"].split(maxsplit=1)[0]
                 if "author" in doc
-                else "Unkown"
+                else "UNKNOWN"
             )
-            title_unfmt = doc["title"] if "title" in doc else "No title"
+            title_unfmt = doc["title"] if "title" in doc else "NO TITLE"
             year_unfmt = str(doc["year"]) if "year" in doc else "0000"
 
             author = re.sub("[^a-z]+", "", author_unfmt.lower())
             year = year_unfmt[-2:]
-            title = re.sub("-", " ", title_unfmt.lower())
-            title = re.sub("[^0-9a-z ]+", "", title)
-            title = list(
-                map(
-                    str.capitalize,
-                    filter(lambda word: word and word not in SKIP_WORDS, title.split()),
-                )
-            )
-            title_len = self._title_length(fmt)
-            title = "".join(title[:title_len])
-            return f"{author}{year}_{title}"
+            title = self.get_title(title_unfmt, fmt)
+            return f"{author}{year}{title}"
         else:
             return papis.format.PythonFormater().format(fmt, doc, doc_key, additional)
 
-    def _title_length(self, fmt: str) -> int:
+    def get_title(self, title: str, fmt: str) -> str:
+        title = re.sub("[^0-9a-z ]+", "", title.lower())
+        title_words = list(
+            map(
+                str.capitalize,
+                filter(lambda word: word and word not in SKIP_WORDS, title.split()),
+            )
+        )
+        wlen = self._title_length_words(fmt)
+        clen = self._title_length_chars(fmt)
+        wlen = None if wlen == -1 else wlen
+        clen = None if clen == -1 else clen
+        title = "".join(title_words[:wlen])[:clen]
+        return title
+
+    def _title_length_words(self, fmt: str) -> int:
         """Returns the length (in words) the title should be shortened to."""
-        if match:=re.match(r'^bbt\[(\d+)\]', fmt):
+        if match := re.search(r"\[title-words=(-?\d+)\]", fmt):
+            logger.debug(f"Found title length: {match.group(1)} words.")
             return int(match.group(1))
-        return DEFAULT_TITLE_LENGTH
+        return DEFAULT_TITLE_LENGTH_WORDS
+
+    def _title_length_chars(self, fmt: str) -> int:
+        """Returns the length (in characters) the title should be shortened to."""
+        if match := re.search(r"\[title-chars=(-?\d+)\]", fmt):
+            logger.debug(f"Found title length: {match.group(1)} chars.")
+            return int(match.group(1))
+        return DEFAULT_TITLE_LENGTH_CHARS
+
 
 SKIP_WORDS = set(
     [
