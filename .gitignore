@@ -1,4 +1,6 @@
 /temp/
+.papis.config
+test.bib
 
 # Created by https://www.toptal.com/developers/gitignore/api/-f,python,linux,vim,quarto,markdown,jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=-f,python,linux,vim,quarto,markdown,jupyternotebooks
