@@ -78,6 +78,19 @@ title-chars = -1
 This will ensure that a maximum of 4 words will be placed in the ref, but they do not have a maximum character length, 
 so will always be fully written out (the default behavior if no title length options are provided).
 
+### Fallback formatter
+
+For anything that is not a reference, use this formatter. 
+Basically, put the formatter you had before switching to bbt here:
+
+```cfg
+[plugins.bbt-formatter]
+fallback = jinja2
+```
+
+Can be any of the installed papis formatters, including custom ones
+(though usually it will be `python`, which is also the default setting).
+
 ---
 
 For now this plugin is a rather simple adaption from [this](https://github.com/hrdl-github/papis/commit/b9b9c6eaa3de159e1b210174ef49e90a89271eb8) commit,
