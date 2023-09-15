@@ -30,20 +30,40 @@ or `Harvey22reflectionsacademiclife` (for Harvey, D. (2022). Reflections on an a
 ## Configuration
 
 No configuration except for the above setup is required for the formatting to work,
-but you can set a couple additional ones to customize the bevhavior to your liking:
-
-### Title length
-
-Currently, you can change the length that the `TitleShort` in `Name2008TitleShort` will be cut down to by setting
-the maximum length in words `title-words=4` or in characters `title-chars=20` under the `[plugins.bbt-formatter]` section in your papis configuration file (usually located at `~/.config/papis/config`).
-
-To set a maximum word length, do:
+but you can set a couple additional ones to customize the behavior to your liking.
+Listed below are all options with their defaults:
 
 ```cfg
 [settings]
 formater = bbt
 ref-format = bbt
 
+[plugins.bbt-formatter]
+fallback = python
+full-year = False
+title-words = 4
+title-chars = -1
+```
+
+### Full year
+
+You can specifiy whether the reference should contain the full 4-digit year representation (i.e. `1997`, `2018`) or just a shortened 2-digit version (`97`, `18`):
+
+```cfg
+[plugins.bbt-formatter]
+full-year = True
+```
+
+This will insert the full 4-digit publication year instead of the (default) shortened version.
+
+### Title length
+
+You can change the length that the `TitleShort` in `Name2008TitleShort` will be cut down to by setting
+the maximum length in words `title-words=4` or in characters `title-chars=20` under the `[plugins.bbt-formatter]` section in your papis configuration file (usually located at `~/.config/papis/config`).
+
+To set a maximum word length, do:
+
+```cfg
 [plugins.bbt-formatter]
 title-words = 4
 ```
@@ -93,8 +113,8 @@ Can be any of the installed papis formatters, including custom ones
 
 ---
 
-For now this plugin is a rather simple adaption from [this](https://github.com/hrdl-github/papis/commit/b9b9c6eaa3de159e1b210174ef49e90a89271eb8) commit,
-turned into an installable papis plugin and extended slightly.
+This plugin is a fairly simple adaption from [this](https://github.com/hrdl-github/papis/commit/b9b9c6eaa3de159e1b210174ef49e90a89271eb8) commit,
+turned into an installable papis plugin and extended a bit.
 
 If you spot a bug or have an idea feel free to open an issue.\
 I might be slow to respond but will consider them all!

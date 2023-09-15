@@ -36,11 +36,9 @@ class BBTFormatter(papis.format.Formater):
                 if "author" in doc
                 else "UNKNOWN"
             )
-            title_unfmt = doc["title"] if "title" in doc else "NO TITLE"
-            year_unfmt = str(doc["year"]) if "year" in doc else "0000"
             author = re.sub("[^a-z]+", "", author_unfmt.lower())
-            year = year_unfmt[-2:]
-            title = self.get_title(title_unfmt)
+            year = self.get_year(int(doc["year"]) if "year" in doc else 0000)
+            title = self.get_title(doc["title"] if "title" in doc else "NO TITLE")
             return f"{author}{year}{title}"
         else:
             # TODO find less hacky way of calling another formatter?
@@ -54,7 +52,20 @@ class BBTFormatter(papis.format.Formater):
             papis.format._FORMATER = None
             return formatter
 
+    def get_year(self, year: int) -> str:
+        """Returns year string according to set year display options.
+
+        Returns either the full 4-digit year or a shortened 2-digit 
+        version depending on the plugin year options. """
+        if papis.config.getboolean("full-year", "plugins.bbt-formatter"):
+            return str(year)
+        return str(year)[-2:]
+
     def get_title(self, title: str) -> str:
+        """Returns cleaned and shortened title.
+
+        Removes skip-words, cleans any punctuation and spaces and trims
+        the title length to that set in plugin length options."""
         title = re.sub("[^0-9a-z ]+", "", title.lower())
         title_words = list(
             map(
