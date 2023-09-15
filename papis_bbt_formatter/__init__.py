@@ -8,8 +8,14 @@ import papis.logging
 
 logger = papis.logging.get_logger(__name__)
 
-DEFAULT_TITLE_LENGTH_WORDS = 3
-DEFAULT_TITLE_LENGTH_CHARS = -1
+DEFAULT_OPTIONS = {
+    "plugins.bbt-formatter": {
+        "fallback": "python",
+        "title-words": 3,
+        "title-chars": -1,
+    }
+}
+papis.config.register_default_settings(DEFAULT_OPTIONS)
 
 
 class BBTFormatter(papis.format.Formater):
@@ -32,15 +38,23 @@ class BBTFormatter(papis.format.Formater):
             )
             title_unfmt = doc["title"] if "title" in doc else "NO TITLE"
             year_unfmt = str(doc["year"]) if "year" in doc else "0000"
-
             author = re.sub("[^a-z]+", "", author_unfmt.lower())
             year = year_unfmt[-2:]
-            title = self.get_title(title_unfmt, fmt)
+            title = self.get_title(title_unfmt)
             return f"{author}{year}{title}"
         else:
-            return papis.format.PythonFormater().format(fmt, doc, doc_key, additional)
+            # TODO find less hacky way of calling another formatter?
+            papis.format._FORMATER = None
+            fallback_formatter = papis.config.getstring(
+                "fallback", "plugins.bbt-formatter"
+            )
+            formatter = papis.format.get_formater(fallback_formatter).format(
+                fmt, doc, doc_key=doc_key, additional=additional
+            )
+            papis.format._FORMATER = None
+            return formatter
 
-    def get_title(self, title: str, fmt: str) -> str:
+    def get_title(self, title: str) -> str:
         title = re.sub("[^0-9a-z ]+", "", title.lower())
         title_words = list(
             map(
@@ -48,26 +62,12 @@ class BBTFormatter(papis.format.Formater):
                 filter(lambda word: word and word not in SKIP_WORDS, title.split()),
             )
         )
-        wlen = self._title_length_words(fmt)
-        clen = self._title_length_chars(fmt)
+        wlen = papis.config.getint("title-words", "plugins.bbt-formatter")
+        clen = papis.config.getint("title-chars", "plugins.bbt-formatter")
         wlen = None if wlen == -1 else wlen
         clen = None if clen == -1 else clen
         title = "".join(title_words[:wlen])[:clen]
         return title
-
-    def _title_length_words(self, fmt: str) -> int:
-        """Returns the length (in words) the title should be shortened to."""
-        if match := re.search(r"\[title-words=(-?\d+)\]", fmt):
-            logger.debug(f"Found title length: {match.group(1)} words.")
-            return int(match.group(1))
-        return DEFAULT_TITLE_LENGTH_WORDS
-
-    def _title_length_chars(self, fmt: str) -> int:
-        """Returns the length (in characters) the title should be shortened to."""
-        if match := re.search(r"\[title-chars=(-?\d+)\]", fmt):
-            logger.debug(f"Found title length: {match.group(1)} chars.")
-            return int(match.group(1))
-        return DEFAULT_TITLE_LENGTH_CHARS
 
 
 SKIP_WORDS = set(
