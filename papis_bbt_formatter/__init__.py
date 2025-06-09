@@ -32,23 +32,33 @@ class BBTFormatter(papis.format.Formatter):
         default: str | None = None,
     ) -> str:
         if not fmt.startswith("bbt:"):
-            fallback_formatter = papis.config.getstring("default-formatter", OPTIONS_SECTION)
+            fallback_formatter = papis.config.getstring(
+                "default-formatter", OPTIONS_SECTION
+            )
+            return self.format_with_fallback(
+                fallback_formatter, fmt, doc, doc_key, additional, default
+            )
 
-            # NOTE sure would be nice to have a less hacky way of calling another formatter
-            _saved = papis.format.FORMATTER
-            papis.format.FORMATTER = None
+        return self.format_with_bbt(doc)
 
-            fallback_formatted: str = papis.format.get_formatter(
-                fallback_formatter
-            ).format(fmt, doc, doc_key, additional, default)
+    def format_with_fallback(
+        self,
+        fallback_formatter: str,
+        fmt: str,
+        doc: papis.document.DocumentLike,
+        doc_key: str,
+        additional: dict[str, Any] | None = None,
+        default: str | None = None,
+    ) -> str:
+        _saved = papis.format.FORMATTER
+        papis.format.FORMATTER = None
+        fallback_formatted: str = papis.format.get_formatter(fallback_formatter).format(
+            fmt, doc, doc_key, additional, default
+        )
+        papis.format.FORMATTER = _saved
+        return fallback_formatted
 
-            papis.format.FORMATTER = _saved
-            return fallback_formatted
-
-        formatted = self.use_bbt(doc)
-        return formatted
-
-    def use_bbt(self, doc: papis.document.DocumentLike) -> str:
+    def format_with_bbt(self, doc: papis.document.DocumentLike) -> str:
         author_unfmt = (
             doc["author_list"][0]["family"]
             if "author_list" in doc
