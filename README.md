@@ -5,6 +5,7 @@ Formats reference keys in papis similarly to the (zotero plugin) `better-bibtex`
 ## Installation
 
 <!-- TODO set up pypi repository / explain git install path -->
+
 You can install from pypi with `pip install git+https://git.martyoeh.me/Marty/papis-bbt-formatter.git`.
 
 That's it! If you have papis and papis-bbt-formatter installed in the same environment (whether virtual or global),
@@ -20,7 +21,7 @@ formater = bbt
 ref-format = bbt:
 ```
 
-For now, the ref-format also *has* to start with `bbt`.
+For now, the ref-format also _has_ to start with `bbt:`.
 
 Formatted reference keys by default will look like:
 
@@ -37,7 +38,7 @@ Listed below are all options with their defaults:
 ```cfg
 [settings]
 formater = bbt
-ref-format = bbt
+ref-format = bbt:
 
 [plugins.bbt]
 default-formatter = python
