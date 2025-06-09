@@ -11,6 +11,28 @@ You can install from pypi with `pip install git+https://git.martyoeh.me/Marty/pa
 That's it! If you have papis and papis-bbt-formatter installed in the same environment (whether virtual or global),
 everything should now be installed.
 
+<!-- markdownlint-disable MD033 -->
+<details>
+<summary>Virtual environment setup</summary>
+
+Depending on the way you set up your virtual environments, plugins like this can be _injected_ by the virtual environment manager.
+
+For example, using `uv`, you can install papis to be accessible globally together with papis-bbt-formatter in the following way:
+
+```bash
+uv tool install --with git+https://git.martyoeh.me/Marty/papis-bbt-formatter.git papis
+```
+
+Or, with `pipx`:
+
+```bash
+pipx install papis
+pipx inject papis git+https://git.martyoeh.me/Marty/papis-bbt-formatter.git
+```
+
+</details>
+<!-- markdownlint-enable MD033 -->
+
 ## Usage
 
 In your papis configuration file (usually `~/.config/papis/config`), add the following under the main settings header:
