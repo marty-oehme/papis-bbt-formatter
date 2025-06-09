@@ -1,7 +1,8 @@
 # papis-bbt-formatter
 
 Formats reference keys in papis similarly to the (zotero plugin) `better-bibtex` keys, in the format `Name2008TitleShort`.
-## Installation:
+
+## Installation
 
 <!-- TODO set up pypi repository / explain git install path -->
 You can install from pypi with `pip install git+https://git.martyoeh.me/Marty/papis-bbt-formatter.git`.
@@ -16,14 +17,14 @@ In your papis configuration file (usually `~/.config/papis/config`), add the fol
 ```cfg
 [settings]
 formater = bbt
-ref-format = bbt
+ref-format = bbt:
 ```
 
-For now, the ref-format also *has* to start with `bbt`. 
+For now, the ref-format also *has* to start with `bbt`.
 
 Formatted reference keys by default will look like:
 
-`Harvey05briefhistoryneoliberalism` (for Harvey, D. (2005). A brief history of neoliberalism. Oxford New York: Oxford University Press.) 
+`Harvey05briefhistoryneoliberalism` (for Harvey, D. (2005). A brief history of neoliberalism. Oxford New York: Oxford University Press.)
 
 or `Harvey22reflectionsacademiclife` (for Harvey, D. (2022). Reflections on an academic life. Human Geography, 15, 14–24. doi:10.1177/19427786211046291)
 
@@ -38,8 +39,8 @@ Listed below are all options with their defaults:
 formater = bbt
 ref-format = bbt
 
-[plugins.bbt-formatter]
-fallback = python
+[plugins.bbt]
+default-formatter = python
 full-year = False
 title-words = 4
 title-chars = -1
@@ -50,7 +51,7 @@ title-chars = -1
 You can specifiy whether the reference should contain the full 4-digit year representation (i.e. `1997`, `2018`) or just a shortened 2-digit version (`97`, `18`):
 
 ```cfg
-[plugins.bbt-formatter]
+[plugins.bbt]
 full-year = True
 ```
 
@@ -59,12 +60,12 @@ This will insert the full 4-digit publication year instead of the (default) shor
 ### Title length
 
 You can change the length that the `TitleShort` in `Name2008TitleShort` will be cut down to by setting
-the maximum length in words `title-words=4` or in characters `title-chars=20` under the `[plugins.bbt-formatter]` section in your papis configuration file (usually located at `~/.config/papis/config`).
+the maximum length in words `title-words=4` or in characters `title-chars=20` under the `[plugins.bbt]` section in your papis configuration file (usually located at `~/.config/papis/config`).
 
 To set a maximum word length, do:
 
 ```cfg
-[plugins.bbt-formatter]
+[plugins.bbt]
 title-words = 4
 ```
 
@@ -73,7 +74,7 @@ change the number to shorten/lengthen to your preference.
 Same idea for maximum character length:
 
 ```cfg
-[plugins.bbt-formatter]
+[plugins.bbt]
 title-chars = 10
 ```
 
@@ -81,7 +82,7 @@ This will allow a maximum of 10 characters for the title.
 Using both:
 
 ```cfg
-[plugins.bbt-formatter]
+[plugins.bbt]
 title-words = 4
 title-chars = 20
 ```
@@ -90,22 +91,22 @@ This will ensure a maximum of 4 words, however if they go more than 20 character
 You can set either option to `-1` to turn it off:
 
 ```cfg
-[plugins.bbt-formatter]
+[plugins.bbt]
 title-words = 4
 title-chars = -1
 ```
 
-This will ensure that a maximum of 4 words will be placed in the ref, but they do not have a maximum character length, 
+This will ensure that a maximum of 4 words will be placed in the ref, but they do not have a maximum character length,
 so will always be fully written out (the default behavior if no title length options are provided).
 
 ### Fallback formatter
 
-For anything that is not a reference, use this formatter. 
+For anything that is not a reference, use this formatter.
 Basically, put the formatter you had before switching to bbt here:
 
 ```cfg
-[plugins.bbt-formatter]
-fallback = jinja2
+[plugins.bbt]
+default-formatter = jinja2
 ```
 
 Can be any of the installed papis formatters, including custom ones

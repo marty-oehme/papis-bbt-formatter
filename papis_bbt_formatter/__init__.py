@@ -8,9 +8,10 @@ import papis.logging
 
 logger = papis.logging.get_logger(__name__)
 
+OPTIONS_SECTION = "plugins.bbt"
 DEFAULT_OPTIONS = {
-    "plugins.bbt-formatter": {
-        "fallback": "python",
+    OPTIONS_SECTION: {
+        "default-formatter": "python",
         "title-words": 3,
         "title-chars": -1,
     }
@@ -30,13 +31,8 @@ class BBTFormatter(papis.format.Formatter):
         additional: dict[str, Any] | None = None,
         default: str | None = None,
     ) -> str:
-        if fmt.startswith("bbt"):
-            formatted = self.use_bbt(doc)
-            return formatted
-        else:
-            fallback_formatter = papis.config.getstring(
-                "fallback", "plugins.bbt-formatter"
-            )
+        if not fmt.startswith("bbt:"):
+            fallback_formatter = papis.config.getstring("default-formatter", OPTIONS_SECTION)
 
             # NOTE sure would be nice to have a less hacky way of calling another formatter
             _saved = papis.format.FORMATTER
@@ -48,6 +44,9 @@ class BBTFormatter(papis.format.Formatter):
 
             papis.format.FORMATTER = _saved
             return fallback_formatted
+
+        formatted = self.use_bbt(doc)
+        return formatted
 
     def use_bbt(self, doc: papis.document.DocumentLike) -> str:
         author_unfmt = (
@@ -67,7 +66,7 @@ class BBTFormatter(papis.format.Formatter):
 
         Returns either the full 4-digit year or a shortened 2-digit
         version depending on the plugin year options."""
-        if papis.config.getboolean("full-year", "plugins.bbt-formatter"):
+        if papis.config.getboolean("full-year", OPTIONS_SECTION):
             return str(year)
         return str(year)[-2:]
 
@@ -83,8 +82,8 @@ class BBTFormatter(papis.format.Formatter):
                 filter(lambda word: word and word not in SKIP_WORDS, title.split()),
             )
         )
-        wlen = papis.config.getint("title-words", "plugins.bbt-formatter")
-        clen = papis.config.getint("title-chars", "plugins.bbt-formatter")
+        wlen = papis.config.getint("title-words", OPTIONS_SECTION)
+        clen = papis.config.getint("title-chars", OPTIONS_SECTION)
         wlen = None if wlen == -1 else wlen
         clen = None if clen == -1 else clen
         title = "".join(title_words[:wlen])[:clen]
