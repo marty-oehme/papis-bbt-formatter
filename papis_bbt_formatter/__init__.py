@@ -1,9 +1,9 @@
 import re
-from typing import Any
-import papis.format
+from typing import Any, override
+
 import papis.config
 import papis.document
-
+import papis.format
 import papis.logging
 
 logger = papis.logging.get_logger(__name__)
@@ -18,45 +18,55 @@ DEFAULT_OPTIONS = {
 papis.config.register_default_settings(DEFAULT_OPTIONS)
 
 
-class BBTFormatter(papis.format.Formater):
+class BBTFormatter(papis.format.Formatter):
     """Provides zotero better-bibtex-like keys."""
 
+    @override
     def format(
         self,
         fmt: str,
-        doc: papis.format.FormatDocType,
+        doc: papis.document.DocumentLike,
         doc_key: str = "",
-        additional: dict[str, Any] = {},
+        additional: dict[str, Any] | None = None,
+        default: str | None = None,
     ) -> str:
         if fmt.startswith("bbt"):
-            author_unfmt = (
-                doc["author_list"][0]["family"]
-                if "author_list" in doc
-                else doc["author"].split(maxsplit=1)[0]
-                if "author" in doc
-                else "UNKNOWN"
-            )
-            author = re.sub("[^a-z]+", "", author_unfmt.lower())
-            year = self.get_year(int(doc["year"]) if "year" in doc else 0000)
-            title = self.get_title(doc["title"] if "title" in doc else "NO TITLE")
-            return f"{author}{year}{title}"
+            formatted = self.use_bbt(doc)
+            return formatted
         else:
-            # TODO find less hacky way of calling another formatter?
-            papis.format._FORMATER = None
             fallback_formatter = papis.config.getstring(
                 "fallback", "plugins.bbt-formatter"
             )
-            formatter = papis.format.get_formater(fallback_formatter).format(
-                fmt, doc, doc_key=doc_key, additional=additional
-            )
-            papis.format._FORMATER = None
-            return formatter
+
+            # NOTE sure would be nice to have a less hacky way of calling another formatter
+            _saved = papis.format.FORMATTER
+            papis.format.FORMATTER = None
+
+            fallback_formatted: str = papis.format.get_formatter(
+                fallback_formatter
+            ).format(fmt, doc, doc_key, additional, default)
+
+            papis.format.FORMATTER = _saved
+            return fallback_formatted
+
+    def use_bbt(self, doc: papis.document.DocumentLike) -> str:
+        author_unfmt = (
+            doc["author_list"][0]["family"]
+            if "author_list" in doc
+            else doc["author"].split(maxsplit=1)[0]
+            if "author" in doc
+            else "UNKNOWN"
+        )
+        author = re.sub("[^a-z]+", "", author_unfmt.lower())
+        year = self.get_year(int(doc["year"]) if "year" in doc else 0000)
+        title = self.get_title(doc["title"] if "title" in doc else "NO TITLE")
+        return f"{author}{year}{title}"
 
     def get_year(self, year: int) -> str:
         """Returns year string according to set year display options.
 
-        Returns either the full 4-digit year or a shortened 2-digit 
-        version depending on the plugin year options. """
+        Returns either the full 4-digit year or a shortened 2-digit
+        version depending on the plugin year options."""
         if papis.config.getboolean("full-year", "plugins.bbt-formatter"):
             return str(year)
         return str(year)[-2:]
