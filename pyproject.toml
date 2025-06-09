@@ -1,21 +1,18 @@
-[tool.poetry]
+[project]
 name = "papis-bbt-formatter"
 version = "0.1.0"
-description = ""
-authors = ["Marty Oehme <marty.oehme@gmail.com>"]
+description = "Add your description here"
 readme = "README.md"
-packages = [{include = "papis_bbt_formatter"}]
+authors = [{ name = "Marty Oehme", email = "contact@martyoeh.me" }]
+requires-python = ">=3.11"
+dependencies = ["papis>=0.14"]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-papis = "^0.13"
+[dependency-groups]
+dev = ["pytest>=8.0.0"]
 
-[tool.poetry.plugins."papis.format"]
+[project.entry-points."papis.format"]
 bbt = "papis_bbt_formatter:BBTFormatter"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
