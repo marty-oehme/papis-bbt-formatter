@@ -67,18 +67,24 @@ class BBTFormatter(papis.format.Formatter):
             else "UNKNOWN"
         )
         author = re.sub("[^a-z]+", "", author_unfmt.lower())
-        year = self.get_year(int(doc["year"]) if "year" in doc else 0000)
+        year = self.get_year(
+            doc["year"] if "year" in doc else doc["date"] if "date" in doc else ""
+        )
         title = self.get_title(doc["title"] if "title" in doc else "NO TITLE")
         return f"{author}{year}{title}"
 
-    def get_year(self, year: int) -> str:
+    def get_year(self, date: str) -> str:
         """Returns year string according to set year display options.
 
         Returns either the full 4-digit year or a shortened 2-digit
         version depending on the plugin year options."""
+        date_match = re.search(r"\d{4}", date)
+        if not date_match:
+            return "0000"
+        date_str = date_match[0]
         if papis.config.getboolean("full-year", OPTIONS_SECTION):
-            return str(year)
-        return str(year)[-2:]
+            return date_str
+        return date_str[-2:]
 
     def get_title(self, title: str) -> str:
         """Returns cleaned and shortened title.
