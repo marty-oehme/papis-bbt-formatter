@@ -39,7 +39,7 @@ In your papis configuration file (usually `~/.config/papis/config`), add the fol
 
 ```cfg
 [settings]
-formater = bbt
+formatter = bbt
 ref-format = bbt:
 ```
 
@@ -59,7 +59,7 @@ Listed below are all options with their defaults:
 
 ```cfg
 [settings]
-formater = bbt
+formatter = bbt
 ref-format = bbt:
 
 [plugins.bbt]
