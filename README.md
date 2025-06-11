@@ -1,6 +1,6 @@
 # papis-bbt-formatter
 
-Formats reference keys in papis similarly to the (zotero plugin) `better-bibtex` keys, in the format `Name2008TitleShort`.
+Formats reference keys in papis similarly to the (zotero plugin) `better-bibtex` keys, in formats such as `Name2008TitleShort`, `Name2008titleshort`, or `Name2008`.
 
 ## Installation
 
@@ -43,7 +43,10 @@ formatter = bbt
 ref-format = bbt:
 ```
 
-For now, the ref-format also _has_ to start with `bbt:`.
+The formatter is set to `bbt` which will invoke it for every formatting operation
+(see the `default-formatter` setting for formatting things other than the ref-key).
+
+For now, the ref-format also _has_ to start with `bbt:` so that the formatter picks it up.
 
 Formatted reference keys by default will look like:
 
