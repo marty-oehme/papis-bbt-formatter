@@ -14,6 +14,7 @@ DEFAULT_OPTIONS = {
         "default-formatter": "python",
         "title-words": 3,
         "title-chars": -1,
+        "full-year": True,
     }
 }
 papis.config.register_default_settings(DEFAULT_OPTIONS)
