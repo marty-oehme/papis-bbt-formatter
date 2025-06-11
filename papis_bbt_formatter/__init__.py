@@ -28,7 +28,7 @@ class BBTFormatter(papis.format.Formatter):
         fmt: str,
         doc: papis.document.DocumentLike,
         doc_key: str = "",
-        additional: dict[str, Any] | None = None,
+        additional: dict[str, Any] | None = None,  # pyright: ignore[reportExplicitAny]
         default: str | None = None,
     ) -> str:
         if not fmt.startswith("bbt:"):
@@ -47,7 +47,7 @@ class BBTFormatter(papis.format.Formatter):
         fmt: str,
         doc: papis.document.DocumentLike,
         doc_key: str,
-        additional: dict[str, Any] | None = None,
+        additional: dict[str, Any] | None = None,  # pyright: ignore[reportExplicitAny]
         default: str | None = None,
     ) -> str:
         _saved = papis.format.FORMATTER
@@ -62,7 +62,7 @@ class BBTFormatter(papis.format.Formatter):
         author_unfmt = (
             doc["author_list"][0]["family"]
             if "author_list" in doc
-            else doc["author"].split(maxsplit=1)[0]
+            else str(doc["author"]).split(maxsplit=1)[0]  # pyright: ignore[reportAny]
             if "author" in doc
             else "UNKNOWN"
         )
