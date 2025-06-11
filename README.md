@@ -67,6 +67,8 @@ default-formatter = python
 full-year = False
 title-words = 4
 title-chars = -1
+title-case = capitalize
+author-case = capitalize
 ```
 
 ### Full year
@@ -121,6 +123,30 @@ title-chars = -1
 
 This will ensure that a maximum of 4 words will be placed in the ref, but they do not have a maximum character length,
 so will always be fully written out (the default behavior if no title length options are provided).
+
+### Capitalization
+
+Both the author and the title can receive different capitalization.
+The options for capitalization are `capitalize`, `lower` and `upper`.
+They can be set independently for author (`author-case`) and title (`title-case`).
+
+```cfg
+[plugins.bbt]
+title-case = capitalize
+author-case = lower
+```
+
+The example above would produce a reference like `name2008TitleShort`, whereas:
+
+```cfg
+[plugins.bbt]
+title-case = upper
+author-case = upper
+```
+
+produces `NAME2008TITLESHORT`.
+
+If either of the settings are set to any other string they are simply passed through to the reference as they are.
 
 ### Fallback formatter
 

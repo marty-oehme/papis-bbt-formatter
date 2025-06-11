@@ -15,6 +15,8 @@ DEFAULT_OPTIONS = {
         "title-words": 3,
         "title-chars": -1,
         "full-year": True,
+        "author-case": "capitalize",  # or "lower" or "upper"
+        "title-case": "capitalize",  # or "lower" or "upper"
     }
 }
 papis.config.register_default_settings(DEFAULT_OPTIONS)
@@ -60,19 +62,23 @@ class BBTFormatter(papis.format.Formatter):
         return fallback_formatted
 
     def format_with_bbt(self, doc: papis.document.DocumentLike) -> str:
-        author_unfmt = (
+        author = self.get_author(
             doc["author_list"][0]["family"]
             if "author_list" in doc
             else str(doc["author"]).split(maxsplit=1)[0]  # pyright: ignore[reportAny]
             if "author" in doc
             else "UNKNOWN"
         )
-        author = re.sub("[^a-z]+", "", author_unfmt.lower())
         year = self.get_year(
             doc["year"] if "year" in doc else doc["date"] if "date" in doc else ""
         )
         title = self.get_title(doc["title"] if "title" in doc else "NO TITLE")
         return f"{author}{year}{title}"
+
+    def get_author(self, author: str) -> str:
+        author = re.sub("[^a-zA-Z]+", "", author)
+        author_case = papis.config.getstring("author-case", OPTIONS_SECTION)
+        return self._case_str(author, author_case)
 
     def get_year(self, date: str) -> str:
         """Returns year string according to set year display options.
@@ -92,19 +98,30 @@ class BBTFormatter(papis.format.Formatter):
 
         Removes skip-words, cleans any punctuation and spaces and trims
         the title length to that set in plugin length options."""
-        title = re.sub("[^0-9a-z ]+", "", title.lower())
-        title_words = list(
-            map(
-                str.capitalize,
-                filter(lambda word: word and word not in SKIP_WORDS, title.split()),
-            )
-        )
+        title = re.sub("[^0-9a-zA-Z ]+", "", title)
+        title_case = papis.config.getstring("title-case", OPTIONS_SECTION)
+        title_words = [
+            self._case_str(word, title_case)
+            for word in title.split()
+            if word not in SKIP_WORDS
+        ]
+
         wlen = papis.config.getint("title-words", OPTIONS_SECTION)
         clen = papis.config.getint("title-chars", OPTIONS_SECTION)
         wlen = None if wlen == -1 else wlen
         clen = None if clen == -1 else clen
+
         title = "".join(title_words[:wlen])[:clen]
         return title
+
+    def _case_str(self, s: str, case: str) -> str:
+        if case == "lower":
+            return s.lower()
+        elif case == "capitalize":
+            return s.capitalize()
+        elif case == "upper":
+            return s.upper()
+        return s
 
 
 SKIP_WORDS = set(
