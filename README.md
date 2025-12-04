@@ -2,6 +2,9 @@
 
 Formats reference keys in papis similarly to the (zotero plugin) `better-bibtex` keys, in formats such as `Name2008TitleShort`, `Name2008titleshort`, or `Name2008`.
 
+> [!IMPORTANT]
+> In the current state this plugin is _not_ supported by papis v0.14.1 as that version refactors the formatting module. To my knowledge papis v0.14.0 should still be supported.
+
 ## Installation
 
 <!-- TODO set up pypi repository / explain git install path -->
