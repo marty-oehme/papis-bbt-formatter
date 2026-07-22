@@ -40,13 +40,9 @@ In your papis configuration file (usually `~/.config/papis/config`), add the fol
 ```cfg
 [settings]
 formatter = bbt
-ref-format = bbt:
 ```
 
-The formatter is set to `bbt` which will invoke it for every formatting operation
-(see the `default-formatter` setting for formatting things other than the ref-key).
-
-For now, the ref-format also _has_ to start with `bbt:` so that the formatter picks it up.
+The formatter is set to `bbt` which will invoke it for every formatting operation.
 
 Formatted reference keys by default will look like:
 
@@ -63,12 +59,10 @@ Listed below are all options with their defaults:
 ```cfg
 [settings]
 formatter = bbt
-ref-format = bbt:
 
 [plugins.bbt]
-default-formatter = python
-full-year = False
-title-words = 4
+full-year = True
+title-words = 3
 title-chars = -1
 title-case = capitalize
 author-case = capitalize
@@ -83,7 +77,7 @@ You can specify whether the reference should contain the full 4-digit year repre
 full-year = True
 ```
 
-This will insert the full 4-digit publication year instead of the (default) shortened version.
+This will insert the full 4-digit publication year (the default).
 
 You can also set a threshold year. Years equal to or newer than the threshold will be shortened to 2 digits, while older years keep their full 4-digit form:
 
@@ -97,16 +91,16 @@ With this setting, a paper from 1899 would produce `Author1899Title`, while a pa
 ### Title length
 
 You can change the length that the `TitleShort` in `Name2008TitleShort` will be cut down to by setting
-the maximum length in words `title-words=4` or in characters `title-chars=20` under the `[plugins.bbt]` section in your papis configuration file (usually located at `~/.config/papis/config`).
+the maximum length in words `title-words=3` or in characters `title-chars=20` under the `[plugins.bbt]` section in your papis configuration file (usually located at `~/.config/papis/config`).
 
 To set a maximum word length, do:
 
 ```cfg
 [plugins.bbt]
-title-words = 4
+title-words = 3
 ```
 
-In this case, the title will be shortened to 4 words maximum (the default),
+In this case, the title will be shortened to 3 words maximum (the default),
 change the number to shorten/lengthen to your preference.
 Same idea for maximum character length:
 
@@ -120,20 +114,20 @@ Using both:
 
 ```cfg
 [plugins.bbt]
-title-words = 4
+title-words = 3
 title-chars = 20
 ```
 
-This will ensure a maximum of 4 words, however if they go more than 20 characters they will be cut off mid-word.
+This will ensure a maximum of 3 words, however if they go more than 20 characters they will be cut off mid-word.
 You can set either option to `-1` to turn it off:
 
 ```cfg
 [plugins.bbt]
-title-words = 4
+title-words = 3
 title-chars = -1
 ```
 
-This will ensure that a maximum of 4 words will be placed in the ref, but they do not have a maximum character length,
+This will ensure that a maximum of 3 words will be placed in the ref, but they do not have a maximum character length,
 so will always be fully written out (the default behavior if no title length options are provided).
 
 ### Capitalization
@@ -159,19 +153,6 @@ author-case = upper
 produces `NAME2008TITLESHORT`.
 
 If either of the settings are set to any other string they are simply passed through to the reference as they are.
-
-### Fallback formatter
-
-For anything that is not a reference, use this formatter.
-Basically, put the formatter you had before switching to bbt here:
-
-```cfg
-[plugins.bbt]
-default-formatter = jinja2
-```
-
-Can be any of the installed papis formatters, including custom ones
-(though usually it will be `python`, which is also the default setting).
 
 ## For developers
 
