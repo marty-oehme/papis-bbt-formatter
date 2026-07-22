@@ -41,7 +41,6 @@ def sample_doc_old():
 
 class TestDefaultOptions:
     def test_default_formatting(self, formatter, sample_doc):
-        papis.config.set("default-formatter", "python", "plugins.bbt")
         papis.config.set("title-words", 3, "plugins.bbt")
         papis.config.set("title-chars", -1, "plugins.bbt")
         papis.config.set("full-year", True, "plugins.bbt")
