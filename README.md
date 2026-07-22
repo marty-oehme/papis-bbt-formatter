@@ -76,7 +76,7 @@ author-case = capitalize
 
 ### Full year
 
-You can specifiy whether the reference should contain the full 4-digit year representation (i.e. `1997`, `2018`) or just a shortened 2-digit version (`97`, `18`):
+You can specify whether the reference should contain the full 4-digit year representation (i.e. `1997`, `2018`) or just a shortened 2-digit version (`97`, `18`):
 
 ```cfg
 [plugins.bbt]
@@ -84,6 +84,15 @@ full-year = True
 ```
 
 This will insert the full 4-digit publication year instead of the (default) shortened version.
+
+You can also set a threshold year. Years equal to or newer than the threshold will be shortened to 2 digits, while older years keep their full 4-digit form:
+
+```cfg
+[plugins.bbt]
+full-year = 1900
+```
+
+With this setting, a paper from 1899 would produce `Author1899Title`, while a paper from 1900 or later would produce `Author00Title` or `Author23Title`. This is useful for distinguishing older references that might otherwise collide when shortened.
 
 ### Title length
 

@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 <!-- ## [0.2.0] -->
 
-<!-- ### Added -->
+### Added
+
+- Add cut-off based conditional year digit shortening for 'full-year' config option
 
 ### Changed
 

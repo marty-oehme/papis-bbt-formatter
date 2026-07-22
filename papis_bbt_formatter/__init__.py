@@ -70,14 +70,40 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
         """Returns year string according to set year display options.
 
         Returns either the full 4-digit year or a shortened 2-digit
-        version depending on the plugin year options."""
+        version depending on the plugin year options.
+        
+        Supports three modes:
+        - True: always return 4-digit year
+        - False: always return 2-digit year
+        - int threshold: return 2-digit year if year >= threshold, else 4-digit
+        """
         date_match = re.search(r"\d{4}", date)
         if not date_match:
             return "0000"
         date_str = date_match[0]
-        if papis.config.getboolean("full-year", OPTIONS_SECTION):
-            return date_str
-        return date_str[-2:]
+        year = int(date_str)
+        
+        full_year_config = papis.config.get("full-year", OPTIONS_SECTION)
+        
+        if isinstance(full_year_config, bool):
+            return date_str if full_year_config else date_str[-2:]
+        
+        if isinstance(full_year_config, str):
+            if full_year_config.lower() == "true":
+                return date_str
+            elif full_year_config.lower() == "false":
+                return date_str[-2:]
+            else:
+                try:
+                    threshold = int(full_year_config)
+                    return date_str[-2:] if year >= threshold else date_str
+                except ValueError:
+                    return date_str
+        
+        if isinstance(full_year_config, int):
+            return date_str[-2:] if year >= full_year_config else date_str
+        
+        return date_str
 
     def get_title(self, title: str) -> str:
         """Returns cleaned and shortened title.
