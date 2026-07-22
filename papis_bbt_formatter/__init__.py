@@ -63,6 +63,7 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
         return f"{author}{year}{title}"
 
     def get_author(self, author: str) -> str:
+        author = unicodedata.normalize("NFKD", author).encode("ascii", "ignore").decode("ascii")
         author = re.sub("[^a-zA-Z]+", "", author)
         author_case = papis.config.getstring("author-case", OPTIONS_SECTION)
         return self._case_str(author, author_case)
