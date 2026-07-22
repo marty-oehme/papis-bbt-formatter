@@ -46,9 +46,9 @@ The formatter is set to `bbt` which will invoke it for every formatting operatio
 
 Formatted reference keys by default will look like:
 
-`Harvey05briefhistoryneoliberalism` (for Harvey, D. (2005). A brief history of neoliberalism. Oxford New York: Oxford University Press.)
+`Harvey2005BriefHistoryNeoliberalism` (for Harvey, D. (2005). A brief history of neoliberalism. Oxford New York: Oxford University Press.)
 
-or `Harvey22reflectionsacademiclife` (for Harvey, D. (2022). Reflections on an academic life. Human Geography, 15, 14–24. doi:10.1177/19427786211046291)
+or `Harvey2022ReflectionsAcademicLife` (for Harvey, D. (2022). Reflections on an academic life. Human Geography, 15, 14–24. doi:10.1177/19427786211046291)
 
 ## Configuration
 
