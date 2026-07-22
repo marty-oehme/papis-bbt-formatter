@@ -193,3 +193,46 @@ class TestCapitalization:
 
         result = formatter.format("bbt:", sample_doc)
         assert "ABRIEFHISTORY" in result
+
+
+class TestRefFormatRequirement:
+    """Regression tests to ensure BBT formatting works regardless of ref-format value."""
+
+    def test_formatting_without_ref_format_set(self, formatter, sample_doc):
+        """BBT formatting should work when no ref-format is configured."""
+        papis.config.set("title-words", 3, "plugins.bbt")
+        papis.config.set("title-chars", -1, "plugins.bbt")
+        papis.config.set("full-year", True, "plugins.bbt")
+        papis.config.set("author-case", "capitalize", "plugins.bbt")
+        papis.config.set("title-case", "capitalize", "plugins.bbt")
+
+        result = formatter.format("any-format-string", sample_doc)
+        assert result == "Harvey2005ABriefHistory"
+
+    def test_formatting_with_bbt_prefix(self, formatter, sample_doc, caplog):
+        """BBT formatting should work when ref-format is set to bbt: (backward compat)."""
+        import logging
+
+        papis.config.set("title-words", 3, "plugins.bbt")
+        papis.config.set("title-chars", -1, "plugins.bbt")
+        papis.config.set("full-year", True, "plugins.bbt")
+        papis.config.set("author-case", "capitalize", "plugins.bbt")
+        papis.config.set("title-case", "capitalize", "plugins.bbt")
+
+        with caplog.at_level(logging.WARNING):
+            result = formatter.format("bbt:", sample_doc)
+
+        assert result == "Harvey2005ABriefHistory"
+        assert "ref-format = bbt:" in caplog.text
+        assert "deprecated" in caplog.text
+
+    def test_formatting_with_arbitrary_format_string(self, formatter, sample_doc):
+        """BBT formatting should work with any arbitrary format string."""
+        papis.config.set("title-words", 3, "plugins.bbt")
+        papis.config.set("title-chars", -1, "plugins.bbt")
+        papis.config.set("full-year", True, "plugins.bbt")
+        papis.config.set("author-case", "capitalize", "plugins.bbt")
+        papis.config.set("title-case", "capitalize", "plugins.bbt")
+
+        result = formatter.format("python:{doc[author]}", sample_doc)
+        assert result == "Harvey2005ABriefHistory"

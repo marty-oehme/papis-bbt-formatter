@@ -17,12 +17,11 @@ logger = papis.logging.get_logger(__name__)
 OPTIONS_SECTION = "plugins.bbt"
 DEFAULT_OPTIONS = {
     OPTIONS_SECTION: {
-        "default-formatter": "python",
         "title-words": 3,
         "title-chars": -1,
         "full-year": True,
-        "author-case": "capitalize",  # or "lower" or "upper"
-        "title-case": "capitalize",  # or "lower" or "upper"
+        "author-case": "capitalize",
+        "title-case": "capitalize",
     }
 }
 papis.config.register_default_settings(DEFAULT_OPTIONS)
@@ -42,28 +41,11 @@ class BBTFormatter(papis.format.Formatter):
         additional: dict[str, Any] | None = None,  # pyright: ignore[reportExplicitAny]
         default: str | None = None,
     ) -> str:
-        if not fmt.startswith("bbt:"):
-            fallback_formatter = papis.config.getstring(
-                "default-formatter", OPTIONS_SECTION
-            )
-            return self.format_with_fallback(
-                fallback_formatter, fmt, doc, doc_key, additional, default
-            )
-
+        if fmt.startswith("bbt:"):
+            logger.warning("""The 'ref-format = bbt:' setting is deprecated and no longer required.
+You can safely remove it from your config.
+Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
         return self.format_with_bbt(doc)
-
-    def format_with_fallback(
-        self,
-        fallback_formatter: str,
-        fmt: str,
-        doc: papis.document.DocumentLike,
-        doc_key: str,
-        additional: dict[str, Any] | None = None,  # pyright: ignore[reportExplicitAny]
-        default: str | None = None,
-    ) -> str:
-        return papis.format.get_formatter_by_name(fallback_formatter).format(
-            fmt, doc, doc_key, additional, default
-        )
 
     def format_with_bbt(self, doc: papis.document.DocumentLike) -> str:
         author = self.get_author(

@@ -174,16 +174,15 @@ uv add --dev papis
 
 Or, what I do, in turn inject it into your normal papis environment as editable: (`uv tool install --with-editable path/to/this/repo papis`).
 
-Currently I can see two big things to do that would help this project out:
+Currently we need one thing above all else:
 
-- A way to encode the options directly in the `ref-format` string, such as `ref-format = bbt:Author[1]year[2]TITLE[2, 20]` or something.
-- Tests for all the little regex-y things we do. Tests for extracting the author, formatting the title, taking apart dates, and so on.
+Tests for all the little regex-y things we do - extracting the author, formatting the title, taking apart dates, and so on. There are undoubtedly edge cases we are not catching yet.
 
-If you have the motivation to work on one of these let me know!
+Feel free to work on this if you have motivation!
 
 ---
 
-This plugin is a fairly simple adaption from [this](https://github.com/hrdl-github/papis/commit/b9b9c6eaa3de159e1b210174ef49e90a89271eb8) commit,
+This plugin is a fairly straight-forward adaption from [this](https://github.com/hrdl-github/papis/commit/b9b9c6eaa3de159e1b210174ef49e90a89271eb8) commit,
 turned into an installable papis plugin and extended a bit.
 
 If you spot a bug or have an idea feel free to open an issue.\
