@@ -1,5 +1,6 @@
 import re
 import sys
+import unicodedata
 from typing import Any, ClassVar
 
 if sys.version_info >= (3, 12):
@@ -110,6 +111,7 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
 
         Removes skip-words, cleans any punctuation and spaces and trims
         the title length to that set in plugin length options."""
+        title = unicodedata.normalize("NFKD", title).encode("ascii", "ignore").decode("ascii")
         title = re.sub("[^0-9a-zA-Z ]+", "", title)
         for phrase in SKIP_PHRASES:
             title = re.sub(r"\b" + re.escape(phrase) + r"\b", " ", title, flags=re.IGNORECASE)

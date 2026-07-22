@@ -9,7 +9,6 @@ def formatter():
     return BBTFormatter()
 
 
-
 class TestSkipWordsEdgeCases:
     """Tests for SKIP_WORDS fixes: multi-word phrases, special chars, and edge cases."""
 
@@ -104,14 +103,50 @@ class TestSkipWordsEdgeCases:
         result = formatter.format("any", doc)
         assert result == "Green2019CatsDogs"
 
-    def test_visavis_without_special_chars(self, formatter):
+    def test_visavis_with_special_chars(self, formatter):
         """'visavis' (cleaned from 'vis-à-vis') should be skipped."""
         self._set_defaults()
         doc = {
             "author": "Black",
-            "title": "Relations Visavis Power",
+            "title": "Relations Vis-à-vis Power",
             "year": "2021",
             "author_list": [{"family": "Black"}],
         }
         result = formatter.format("any", doc)
         assert result == "Black2021RelationsPower"
+
+    def test_accented_characters_in_title(self, formatter):
+        """Accented characters should be normalized to ASCII."""
+        self._set_defaults()
+        doc = {
+            "author": "Dupont",
+            "title": "Café Culture in Paris",
+            "year": "2019",
+            "author_list": [{"family": "Dupont"}],
+        }
+        result = formatter.format("any", doc)
+        assert result == "Dupont2019CafeCultureParis"
+
+    def test_naive_with_dieresis(self, formatter):
+        """'naïve' should normalize to 'naive'."""
+        self._set_defaults()
+        doc = {
+            "author": "Smith",
+            "title": "Naïve Approaches to Problem Solving",
+            "year": "2020",
+            "author_list": [{"family": "Smith"}],
+        }
+        result = formatter.format("any", doc)
+        assert result == "Smith2020NaiveApproachesProblemSolving"
+
+    def test_resume_with_accents(self, formatter):
+        """'résumé' should normalize to 'resume'."""
+        self._set_defaults()
+        doc = {
+            "author": "Jones",
+            "title": "Building a Résumé",
+            "year": "2018",
+            "author_list": [{"family": "Jones"}],
+        }
+        result = formatter.format("any", doc)
+        assert result == "Jones2018BuildingResume"
