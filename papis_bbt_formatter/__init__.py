@@ -1,5 +1,11 @@
 import re
-from typing import Any, override
+import sys
+from typing import Any, ClassVar
+
+if sys.version_info >= (3, 12):
+    from typing import override
+else:
+    from typing_extensions import override
 
 import papis.config
 import papis.document
@@ -24,6 +30,8 @@ papis.config.register_default_settings(DEFAULT_OPTIONS)
 
 class BBTFormatter(papis.format.Formatter):
     """Provides zotero better-bibtex-like keys."""
+
+    name: ClassVar[str] = "bbt"
 
     @override
     def format(
@@ -53,13 +61,9 @@ class BBTFormatter(papis.format.Formatter):
         additional: dict[str, Any] | None = None,  # pyright: ignore[reportExplicitAny]
         default: str | None = None,
     ) -> str:
-        _saved = papis.format.FORMATTER
-        papis.format.FORMATTER = None
-        fallback_formatted: str = papis.format.get_formatter(fallback_formatter).format(
+        return papis.format.get_formatter_by_name(fallback_formatter).format(
             fmt, doc, doc_key, additional, default
         )
-        papis.format.FORMATTER = _saved
-        return fallback_formatted
 
     def format_with_bbt(self, doc: papis.document.DocumentLike) -> str:
         author = self.get_author(
