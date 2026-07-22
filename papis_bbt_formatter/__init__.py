@@ -86,20 +86,19 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
         
         full_year_config = papis.config.get("full-year", OPTIONS_SECTION)
         
-        if isinstance(full_year_config, bool):
-            return date_str if full_year_config else date_str[-2:]
-        
         if isinstance(full_year_config, str):
             if full_year_config.lower() == "true":
-                return date_str
+                full_year_config = True
             elif full_year_config.lower() == "false":
-                return date_str[-2:]
+                full_year_config = False
             else:
                 try:
-                    threshold = int(full_year_config)
-                    return date_str[-2:] if year >= threshold else date_str
+                    full_year_config = int(full_year_config)
                 except ValueError:
                     return date_str
+        
+        if isinstance(full_year_config, bool):
+            return date_str if full_year_config else date_str[-2:]
         
         if isinstance(full_year_config, int):
             return date_str[-2:] if year >= full_year_config else date_str

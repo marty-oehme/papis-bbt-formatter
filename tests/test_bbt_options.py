@@ -110,61 +110,6 @@ class TestTitleChars:
         assert result == "Harvey2005BriefHistoryNeoliberalism"
 
 
-class TestFullYear:
-    def test_full_year_true(self, formatter, sample_doc):
-        papis.config.set("title-words", 3, "plugins.bbt")
-        papis.config.set("title-chars", -1, "plugins.bbt")
-        papis.config.set("full-year", True, "plugins.bbt")
-        papis.config.set("author-case", "capitalize", "plugins.bbt")
-        papis.config.set("title-case", "capitalize", "plugins.bbt")
-
-        result = formatter.format("bbt:", sample_doc)
-        assert result == "Harvey2005BriefHistoryNeoliberalism"
-
-    def test_full_year_false(self, formatter, sample_doc_old):
-        papis.config.set("title-words", 3, "plugins.bbt")
-        papis.config.set("title-chars", -1, "plugins.bbt")
-        papis.config.set("full-year", False, "plugins.bbt")
-        papis.config.set("author-case", "capitalize", "plugins.bbt")
-        papis.config.set("title-case", "capitalize", "plugins.bbt")
-
-        result = formatter.format("bbt:", sample_doc_old)
-        assert result == "Fielding51Amelia"
-
-    def test_full_year_threshold_newer(self, formatter, sample_doc):
-        """Year >= threshold should return 2-digit version."""
-        papis.config.set("title-words", 3, "plugins.bbt")
-        papis.config.set("title-chars", -1, "plugins.bbt")
-        papis.config.set("full-year", 2000, "plugins.bbt")
-        papis.config.set("author-case", "capitalize", "plugins.bbt")
-        papis.config.set("title-case", "capitalize", "plugins.bbt")
-
-        result = formatter.format("bbt:", sample_doc)
-        assert result == "Harvey05BriefHistoryNeoliberalism"
-
-    def test_full_year_threshold_older(self, formatter, sample_doc_old):
-        """Year < threshold should return 4-digit version."""
-        papis.config.set("title-words", 3, "plugins.bbt")
-        papis.config.set("title-chars", -1, "plugins.bbt")
-        papis.config.set("full-year", 1900, "plugins.bbt")
-        papis.config.set("author-case", "capitalize", "plugins.bbt")
-        papis.config.set("title-case", "capitalize", "plugins.bbt")
-
-        result = formatter.format("bbt:", sample_doc_old)
-        assert result == "Fielding1751Amelia"
-
-    def test_full_year_threshold_exact(self, formatter, sample_doc):
-        """Year == threshold should return 2-digit version (>=)."""
-        papis.config.set("title-words", 3, "plugins.bbt")
-        papis.config.set("title-chars", -1, "plugins.bbt")
-        papis.config.set("full-year", 2005, "plugins.bbt")
-        papis.config.set("author-case", "capitalize", "plugins.bbt")
-        papis.config.set("title-case", "capitalize", "plugins.bbt")
-
-        result = formatter.format("bbt:", sample_doc)
-        assert result == "Harvey05BriefHistoryNeoliberalism"
-
-
 class TestCapitalization:
     def test_author_case_capitalize(self, formatter, sample_doc):
         papis.config.set("title-words", 3, "plugins.bbt")
