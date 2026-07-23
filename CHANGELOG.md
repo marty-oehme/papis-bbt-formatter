@@ -2,12 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-<!-- ## [0.2.0] -->
+<!-- ## [Unreleased] -->
+
+<!-- ### Added -->
+
+<!-- ### Changed -->
+
+<!-- ### Fixed -->
+
+## [0.2.0]
 
 ### Added
 
 - Add cut-off based conditional year digit shortening for 'full-year' config option
+- Title and Author unicode normalization
 
 ### Changed
 
@@ -16,6 +24,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Compatibility with papis v0.15.x
+- Multi-word skip phrase detection
 
 <!-- ### Removed -->
 
