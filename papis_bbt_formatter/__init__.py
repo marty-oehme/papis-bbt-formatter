@@ -68,7 +68,7 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
         author_case = papis.config.getstring("author-case", OPTIONS_SECTION)
         return self._case_str(author, author_case)
 
-    def get_year(self, date: str) -> str:
+    def get_year(self, date: str | int | None) -> str:
         """Returns year string according to set year display options.
 
         Returns either the full 4-digit year or a shortened 2-digit
@@ -79,6 +79,7 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
         - False: always return 2-digit year
         - int threshold: return 2-digit year if year >= threshold, else 4-digit
         """
+        date = "" if date is None else str(date)
         date_match = re.search(r"\d{4}", date)
         if not date_match:
             return "0000"

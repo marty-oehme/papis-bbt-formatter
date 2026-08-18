@@ -1,5 +1,6 @@
-import pytest
 import papis.config
+import pytest
+
 from papis_bbt_formatter import BBTFormatter
 
 
@@ -106,3 +107,17 @@ class TestFullYearThreshold:
     def test_invalid_string_falls_back_to_full(self, formatter):
         papis.config.set("full-year", "garbage", "plugins.bbt")
         assert formatter.get_year("2005") == "2005"
+
+
+class TestYearIntFormatOrMissing:
+    def test_parses_full_int_year(self, formatter):
+        papis.config.set("full-year", True, "plugins.bbt")
+        assert formatter.get_year(2005) == "2005"
+
+    def test_parses_short_int_year(self, formatter):
+        papis.config.set("full-year", False, "plugins.bbt")
+        assert formatter.get_year(2005) == "05"
+
+    def test_parses_full_missing_year(self, formatter):
+        papis.config.set("full-year", True, "plugins.bbt")
+        assert formatter.get_year(None) == "0000"

@@ -2,13 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-<!-- ## [Unreleased] -->
+## [Unreleased]
 
 <!-- ### Added -->
 
 <!-- ### Changed -->
 
-<!-- ### Fixed -->
+### Fixed
+
+- Correctly parses dates in int form or missing
 
 ## [0.2.0]
 
