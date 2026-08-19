@@ -2,18 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+<!-- ## [Unreleased] -->
 
 <!-- ### Added -->
 
 <!-- ### Changed -->
+
+<!-- ### Fixed -->
+
+## [0.2.1] - 2026-08-19
 
 ### Fixed
 
 - Correctly parses dates in int form or missing
 - Fix crash on existing but empty 'author_list' or 'author' metadata fields
 
-## [0.2.0]
+## [0.2.0] - 2026-07-23
 
 ### Added
 
