@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Correctly parses dates in int form or missing
+- Fix crash on existing but empty 'author_list' or 'author' metadata fields
 
 ## [0.2.0]
 

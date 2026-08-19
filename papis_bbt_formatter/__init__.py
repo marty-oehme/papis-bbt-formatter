@@ -49,13 +49,14 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
         return self.format_with_bbt(doc)
 
     def format_with_bbt(self, doc: papis.document.DocumentLike) -> str:
-        author = self.get_author(
+        author = (
             doc["author_list"][0]["family"]
-            if "author_list" in doc
+            if "author_list" in doc and doc["author_list"]
             else str(doc["author"]).split(maxsplit=1)[0]  # pyright: ignore[reportAny]
-            if "author" in doc
+            if "author" in doc and doc["author"]
             else "UNKNOWN"
         )
+        author = self.get_author(author)
         year = self.get_year(
             doc["year"] if "year" in doc else doc["date"] if "date" in doc else ""
         )
