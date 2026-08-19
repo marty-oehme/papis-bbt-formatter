@@ -63,7 +63,11 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
         return f"{author}{year}{title}"
 
     def get_author(self, author: str) -> str:
-        author = unicodedata.normalize("NFKD", author).encode("ascii", "ignore").decode("ascii")
+        author = (
+            unicodedata.normalize("NFKD", author)
+            .encode("ascii", "ignore")
+            .decode("ascii")
+        )
         author = re.sub("[^a-zA-Z]+", "", author)
         author_case = papis.config.getstring("author-case", OPTIONS_SECTION)
         return self._case_str(author, author_case)
@@ -73,7 +77,7 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
 
         Returns either the full 4-digit year or a shortened 2-digit
         version depending on the plugin year options.
-        
+
         Supports three modes:
         - True: always return 4-digit year
         - False: always return 2-digit year
@@ -85,9 +89,9 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
             return "0000"
         date_str = date_match[0]
         year = int(date_str)
-        
+
         full_year_config = papis.config.get("full-year", OPTIONS_SECTION)
-        
+
         if isinstance(full_year_config, str):
             if full_year_config.lower() == "true":
                 full_year_config = True
@@ -98,13 +102,13 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
                     full_year_config = int(full_year_config)
                 except ValueError:
                     return date_str
-        
+
         if isinstance(full_year_config, bool):
             return date_str if full_year_config else date_str[-2:]
-        
+
         if isinstance(full_year_config, int):
             return date_str[-2:] if year >= full_year_config else date_str
-        
+
         return date_str
 
     def get_title(self, title: str) -> str:
@@ -112,10 +116,16 @@ Setting 'formatter = bbt' is sufficient to enable BBT key generation.""")
 
         Removes skip-words, cleans any punctuation and spaces and trims
         the title length to that set in plugin length options."""
-        title = unicodedata.normalize("NFKD", title).encode("ascii", "ignore").decode("ascii")
+        title = (
+            unicodedata.normalize("NFKD", title)
+            .encode("ascii", "ignore")
+            .decode("ascii")
+        )
         title = re.sub("[^0-9a-zA-Z ]+", "", title)
         for phrase in SKIP_PHRASES:
-            title = re.sub(r"\b" + re.escape(phrase) + r"\b", " ", title, flags=re.IGNORECASE)
+            title = re.sub(
+                r"\b" + re.escape(phrase) + r"\b", " ", title, flags=re.IGNORECASE
+            )
         title_case = papis.config.getstring("title-case", OPTIONS_SECTION)
         title_words = [
             self._case_str(word, title_case)

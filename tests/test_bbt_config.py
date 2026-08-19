@@ -111,12 +111,16 @@ class TestCapitalization:
 class TestRefFormatRequirement:
     """Regression tests to ensure BBT formatting works regardless of ref-format value."""
 
-    def test_formatting_without_ref_format_set(self, formatter, sample_doc, bbt_defaults):
+    def test_formatting_without_ref_format_set(
+        self, formatter, sample_doc, bbt_defaults
+    ):
         """BBT formatting should work when no ref-format is configured."""
         result = formatter.format("any-format-string", sample_doc)
         assert result == "Harvey2005BriefHistoryNeoliberalism"
 
-    def test_formatting_with_bbt_prefix(self, formatter, sample_doc, bbt_defaults, caplog):
+    def test_formatting_with_bbt_prefix(
+        self, formatter, sample_doc, bbt_defaults, caplog
+    ):
         """BBT formatting should work when ref-format is set to bbt: (backward compat)."""
         import logging
 
@@ -127,7 +131,9 @@ class TestRefFormatRequirement:
         assert "ref-format = bbt:" in caplog.text
         assert "deprecated" in caplog.text
 
-    def test_formatting_with_arbitrary_format_string(self, formatter, sample_doc, bbt_defaults):
+    def test_formatting_with_arbitrary_format_string(
+        self, formatter, sample_doc, bbt_defaults
+    ):
         """BBT formatting should work with any arbitrary format string."""
         result = formatter.format("python:{doc[author]}", sample_doc)
         assert result == "Harvey2005BriefHistoryNeoliberalism"
